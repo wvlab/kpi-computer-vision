@@ -1,0 +1,239 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{fontspec}
+\usepackage[ukrainian]{babel}
+
+\usepackage{Alegreya} 
+
+\setmonofont{0xProto-Regular} 
+
+\usepackage{geometry}
+\geometry{
+    left=25mm,
+    right=15mm,
+    top=20mm,
+    bottom=20mm
+}
+
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}
+
+\usepackage{setspace}
+\singlespacing
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\renewcommand{\thesection}{\Roman{section}} 
+\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    language=Python,
+    frame=single
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+\directlua{token.set_macro(("studentname"),   os.getenv("REPORT_STUDENT_NAME")   or ("Student"),   ("global"))}
+\directlua{token.set_macro(("studentcourse"), os.getenv("REPORT_STUDENT_COURSE") or ("Course"),    ("global"))}
+\directlua{token.set_macro(("studentgroup"),  os.getenv("REPORT_STUDENT_GROUP")  or ("Group"),     ("global"))}
+\directlua{token.set_macro(("professorname"), os.getenv("REPORT_PROFESSOR_NAME") or ("Professor"), ("global"))}
+
+\begin{titlepage}
+    \centering
+    \textbf{Міністерство освіти і науки України}\\
+    \textbf{Національний технічний університет України}\\
+    \textbf{«Київський політехнічний інститут імені Ігоря Сікорського»}\\
+    \textbf{Кафедра обчислювальної техніки ФІОТ}
+
+    \vspace{4cm}
+
+    \textbf{\Large ЗВІТ}\\
+    \textbf{з лабораторної роботи №1}\\
+    \vspace{0.5cm}
+    з навчальної дисципліни «Технології Computer Vision»\\
+    (Сертифікатна програма Data Science із Sigma Software)
+
+    \vspace{2cm}
+
+    \textbf{Тема:}\\
+    \textbf{\Large БАЗОВІ ГЕОМЕТРИЧНІ ПЕРЕТВОРЕННЯ 2D ТА 3D ОБ’ЄКТІВ}
+
+    \vspace{3cm}
+
+    \begin{flushright}
+        \textbf{Виконав:}\\
+        Студент курсу \studentcourse{}, групи \studentgroup{}
+        
+        \studentname{}
+
+        \vspace{1cm}
+        
+        \textbf{Перевірив:}
+        
+        \professorname{}
+    \end{flushright}
+
+    \vfill
+
+    \textbf{Київ 2025}
+\end{titlepage}
+
+\section{Мета роботи}
+Дослідити та програмно реалізувати математичні моделі афінних перетворень
+графічних об'єктів (2D та 3D) з використанням матричних операцій та однорідних
+координат. Опанувати створення динамічних сцен за допомогою Python та бібліотек
+Marimo/Matplotlib.
+
+\section{Завдання (Варіант 14)}
+
+\subsection{Завдання І рівня (2D)}
+Здійснити синтез математичних моделей та розробити скрипт для 2D перетворень:
+\begin{itemize}
+    \item \textbf{Фігура:} Шестикутник.
+    \item \textbf{Операції:} Обертання – Переміщення – Масштабування.
+    \item \textbf{Умови:} Циклічна реалізація, прихована траєкторія руху, виконання в межах графічного вікна.
+\end{itemize}
+
+\subsection{Завдання ІІ рівня (3D)}
+Здійснити синтез моделей для 3D перетворень:
+\begin{itemize}
+    \item \textbf{Фігура:} Піраміда з трикутною основою.
+    \item \textbf{Проекція:} Аксонометрична.
+    \item \textbf{Динаміка:} Циклічне обертання навколо внутрішньої вісі, ефекти появи/зникнення (fade in/out), випадкова зміна положення та кольору після кожного циклу.
+\end{itemize}
+
+\section{Теоретичні відомості та математичні моделі}
+
+Для реалізації перетворень використано \textbf{однорідні координати}
+(Homogeneous Coordinates). Це дозволяє записати афінні перетворення (включаючи
+паралельне перенесення) як лінійні операції множення матриць.
+
+\subsection{2D простір}
+Вектор координат точки: $P = [x, y, 1]^T$. Матриця перетворення має розмірність $3 \times 3$.
+
+Матриця масштабування ($S$), обертання ($R$) та переміщення ($T$):
+\[
+    S(s_x, s_y) = \begin{bmatrix}
+        s_x & 0   & 0 \\
+        0   & s_y & 0 \\
+        0   & 0   & 1
+    \end{bmatrix}, \quad
+    R(\alpha) = \begin{bmatrix}
+        \cos\alpha & -\sin\alpha & 0 \\
+        \sin\alpha &  \cos\alpha & 0 \\
+        0          & 0           & 1
+    \end{bmatrix}, \quad
+    T(d_x, d_y) = \begin{bmatrix}
+        1 & 0 & d_x \\
+        0 & 1 & d_y \\
+        0 & 0 & 1
+    \end{bmatrix}
+\]
+
+\subsection{3D простір та проекція}
+Вектор координат: $P = [x, y, z, 1]^T$. Матриця перетворення має розмірність $4 \times 4$.
+
+Для відображення 3D об'єкта на 2D екрані використано \textbf{аксонометричну
+проекцію}, яка формується як добуток матриці ортогонального проектування
+($P_{ort}$) та матриць повороту навколо осей $X$ та $Y$:
+\[
+    M_{proj} = P_{ort} \cdot R_y(\beta) \cdot R_x(\alpha)
+\]
+
+\section{Програмна реалізація}
+
+Програма реалізована мовою Python з використанням середовища \textbf{Marimo}
+для інтерактивності. Код розділено на бібліотеку трансформацій та виконувані
+ноутбуки.
+
+\subsection{Бібліотека трансформацій (src/lab1/transform.py)}
+Реалізація генераторів матриць та функції композиції.
+
+\lstinputlisting[
+    language=python,
+    caption=Функції генерації матриць та композиції
+]{../src/lab1/transform.py}
+
+\subsection{Генерація фігур (src/lab1/creation.py)}
+
+\lstinputlisting[
+    language=python,
+    caption=Функції генерації матриць та композиції
+]{../src/lab1/creation.py}
+
+\subsection{Реалізація логіки Task 2 (notebooks/task2.py)}
+Фрагмент коду, що відповідає за динаміку сцени, випадкову зміну параметрів та
+візуалізацію.
+
+\begin{lstlisting}[language=python]
+\end{lstlisting}
+
+\section{Результати роботи}
+
+\subsection{2D Анімація (Шестикутник)}
+Реалізовано рух по колу, пульсацію та власне обертання.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{media/task1_result.png}
+    \caption{Результат роботи Task 1: 2D перетворення шестикутника.}
+    \label{fig:task1}
+\end{figure}
+
+\subsection{3D Анімація (Піраміда)}
+Фігура з'являється, обертається та зникає. Кожен цикл відбувається в новому випадковому місці простору.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{media/task2_result.png}
+    \caption{Результат роботи Task 2: 3D піраміда в аксонометрії.}
+    \label{fig:task2}
+\end{figure}
+
+\section{Висновки}
+
+У ході лабораторної роботи було:
+\begin{enumerate}
+    \item Розроблено бібліотеку базових геометричних перетворень з
+        використанням бібліотеки \texttt{numpy}.
+    \item Використано розширені матриці координат ($3 \times N$ та $4 \times
+        N$) для уніфікації операцій переміщення, масштабування та обертання.
+    \item Реалізовано складну динаміку 3D-об'єкта: циклічна зміна прозорості
+        (fade-in/fade-out) та телепортація об'єкта у випадкові координати.
+\end{enumerate}
+
+\end{document}

@@ -10,5 +10,14 @@
         "texlive-luatex"                  ; luatex 
         "texlive-lualibs"                 ; utility libraries like lfs
         "texlive-latexmk"                 ; build system for examples
+        "texlive-fontspec"
+        "texlive-babel-ukrainian"
+        "texlive-xkeyval"
+        "texlive-setspace"
+        "texlive-float"
         "texlive-alegreya"                ; font for reports
+        "texlive-listings"
+        "texlive-xcolor"
+        "ncurses"                         ; tput
+        "fontconfig"
         "font-0xproto"))

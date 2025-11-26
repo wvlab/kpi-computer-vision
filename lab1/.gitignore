@@ -2,3 +2,5 @@ __pycache__/
 __marimo__/
 *.egg-info/
 aux/
+*.fdb_latexmk
+*.pdf
