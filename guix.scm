@@ -3,9 +3,11 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest
-  (list "uv" "zstd:lib" "zlib" "gcc-toolchain" ; python stuff
-        "texlive-scheme-basic"                 ; base latex
-        "texlive-luatex"                       ; luatex 
-        "texlive-lualibs"                      ; utility libraries like lfs
-        "texlive-latexmk"                      ; build system for examples
-        "texlive-alegreya"))                   ; font for docs
+  (list "zstd:lib" "zlib" "gcc-toolchain" ; general dev libs
+        "uv"                              ; python dev tools
+        "make"                            ; general dev tools
+        "texlive-scheme-basic"            ; base latex
+        "texlive-luatex"                  ; luatex 
+        "texlive-lualibs"                 ; utility libraries like lfs
+        "texlive-latexmk"                 ; build system for examples
+        "texlive-alegreya"))              ; font for docs
