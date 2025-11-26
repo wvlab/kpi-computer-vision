@@ -143,7 +143,8 @@ Marimo/Matplotlib.
 паралельне перенесення) як лінійні операції множення матриць.
 
 \subsection{2D простір}
-Вектор координат точки: $P = [x, y, 1]^T$. Матриця перетворення має розмірність $3 \times 3$.
+Вектор координат точки: $P = [x, y, 1]^T$.
+Матриця перетворення має розмірність $3 \times 3$.
 
 Матриця масштабування ($S$), обертання ($R$) та переміщення ($T$):
 \[
@@ -195,13 +196,6 @@ Marimo/Matplotlib.
     caption=Функції генерації матриць та композиції
 ]{../src/lab1/creation.py}
 
-\subsection{Реалізація логіки Task 2 (notebooks/task2.py)}
-Фрагмент коду, що відповідає за динаміку сцени, випадкову зміну параметрів та
-візуалізацію.
-
-\begin{lstlisting}[language=python]
-\end{lstlisting}
-
 \section{Результати роботи}
 
 \subsection{2D Анімація (Шестикутник)}
@@ -209,17 +203,19 @@ Marimo/Matplotlib.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.8\textwidth]{media/task1_result.png}
+    \includegraphics[width=0.8\textwidth]{media/task1_result.png}
     \caption{Результат роботи Task 1: 2D перетворення шестикутника.}
     \label{fig:task1}
 \end{figure}
+
+\newpage
 
 \subsection{3D Анімація (Піраміда)}
 Фігура з'являється, обертається та зникає. Кожен цикл відбувається в новому випадковому місці простору.
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.8\textwidth]{media/task2_result.png}
+    \includegraphics[width=0.8\textwidth]{media/task2_result.png}
     \caption{Результат роботи Task 2: 3D піраміда в аксонометрії.}
     \label{fig:task2}
 \end{figure}
@@ -235,5 +231,7 @@ Marimo/Matplotlib.
     \item Реалізовано складну динаміку 3D-об'єкта: циклічна зміна прозорості
         (fade-in/fade-out) та телепортація об'єкта у випадкові координати.
 \end{enumerate}
+
+Завдання виконав \studentname
 
 \end{document}
