@@ -10,4 +10,5 @@
         "texlive-luatex"                  ; luatex 
         "texlive-lualibs"                 ; utility libraries like lfs
         "texlive-latexmk"                 ; build system for examples
-        "texlive-alegreya"))              ; font for docs
+        "texlive-alegreya"                ; font for reports
+        "font-0xproto"))
