@@ -11,6 +11,7 @@ def _():
     import numpy as np
     import random
     from lab1 import transform, creation
+
     return creation, mo, np, plt, random, transform
 
 
@@ -34,7 +35,11 @@ def _(mo):
 
 @app.cell
 def _(mo, play):
-    timer = mo.ui.refresh(label="Tick", default_interval="100ms") if play.value else None
+    timer = (
+        mo.ui.refresh(label="Tick", default_interval="100ms")
+        if play.value
+        else None
+    )
     timer
     return (timer,)
 
@@ -42,7 +47,7 @@ def _(mo, play):
 @app.cell
 def _(mo):
     get_t, set_t = mo.state(0.0)
-    get_color, set_color = mo.state('#884EA0')
+    get_color, set_color = mo.state("#884EA0")
     return get_color, get_t, set_color, set_t
 
 
@@ -50,10 +55,19 @@ def _(mo):
 def _(get_color, get_t, rand_color, random, set_color, set_t, speed_t, timer):
     if timer is not None:
         prev_t = get_t()
-        new_t = (prev_t + speed_t.value)
+        new_t = prev_t + speed_t.value
 
         if (new_t % 360) < (prev_t % 360) and rand_color.value:
-            new_c = random.choice(['#E74C3C', '#8E44AD', '#3498DB', '#16A085', '#F39C12', '#2C3E50'])
+            new_c = random.choice(
+                [
+                    "#E74C3C",
+                    "#8E44AD",
+                    "#3498DB",
+                    "#16A085",
+                    "#F39C12",
+                    "#2C3E50",
+                ]
+            )
             set_color(new_c)
 
         set_t(new_t % 360)
@@ -112,11 +126,18 @@ def _(current_color, current_t, plt, scale, shape):
 
     ax.set_xlim(-window_limit, window_limit)
     ax.set_ylim(-window_limit, window_limit)
-    ax.set_aspect('equal')
-    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.set_aspect("equal")
+    ax.grid(True, linestyle="--", alpha=0.3)
     ax.set_axisbelow(True)
 
-    ax.plot(shape[0], shape[1], color=current_color, linewidth=3, marker='o', markersize=4)
+    ax.plot(
+        shape[0],
+        shape[1],
+        color=current_color,
+        linewidth=3,
+        marker="o",
+        markersize=4,
+    )
     ax.fill(shape[0], shape[1], color=current_color, alpha=0.3)
 
     ax.set_title(f"t={current_t:.0f}° | Scale={scale:.2f}")
@@ -139,15 +160,16 @@ def _(mo):
     rand_color = mo.ui.switch(label="Random Color Cycle", value=True)
     jitter = mo.ui.switch(label="Add Noise (Jitter)", value=False)
 
-    settings = mo.accordion({
-        "Geometry & Motion": mo.vstack([hex_radius, orbit_radius, rot_mult, scale_mult]),
-        "Randomness": mo.vstack([rand_color, jitter])
-    })
+    settings = mo.accordion(
+        {
+            "Geometry & Motion": mo.vstack(
+                [hex_radius, orbit_radius, rot_mult, scale_mult]
+            ),
+            "Randomness": mo.vstack([rand_color, jitter]),
+        }
+    )
 
-    mo.vstack([
-        mo.hstack([play, speed_t], justify="center"),
-        settings
-    ])
+    mo.vstack([mo.hstack([play, speed_t], justify="center"), settings])
     return (
         hex_radius,
         jitter,

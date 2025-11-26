@@ -11,12 +11,17 @@ def _():
     import numpy as np
     import random
     from lab1 import transform, creation
+
     return creation, mo, plt, random, transform
 
 
 @app.cell
 def _(mo, play):
-    timer = mo.ui.refresh(label="Tick", default_interval="1s") if play.value else None
+    timer = (
+        mo.ui.refresh(label="Tick", default_interval="1s")
+        if play.value
+        else None
+    )
     timer
     return (timer,)
 
@@ -24,11 +29,9 @@ def _(mo, play):
 @app.cell
 def _(mo):
     get_frame, set_frame = mo.state(0)
-    get_props, set_props = mo.state({
-        "idx": -1, 
-        "pos": (0, 0, 0), 
-        "color": "#E74C3C"
-    })
+    get_props, set_props = mo.state(
+        {"idx": -1, "pos": (0, 0, 0), "color": "#E74C3C"}
+    )
     return get_frame, get_props, set_frame, set_props
 
 
@@ -55,15 +58,13 @@ def _(current_frame, cycle_len, get_props, random, set_props, spawn_radius):
         new_pos = (
             random.uniform(-limit, limit),
             random.uniform(-limit, limit),
-            random.uniform(-limit, limit)
+            random.uniform(-limit, limit),
         )
-        new_color = random.choice(['#E74C3C', '#3498DB', '#2ECC71', '#F1C40F', '#9B59B6', '#1ABC9C'])
+        new_color = random.choice(
+            ["#E74C3C", "#3498DB", "#2ECC71", "#F1C40F", "#9B59B6", "#1ABC9C"]
+        )
 
-        new_props = {
-            "idx": new_cycle_idx,
-            "pos": new_pos,
-            "color": new_color
-        }
+        new_props = {"idx": new_cycle_idx, "pos": new_pos, "color": new_color}
 
         set_props(new_props)
         active_props = new_props
@@ -94,15 +95,15 @@ def _(
     else:
         opacity = 1.0
 
-    points, edges =  creation.pyramid(base_size.value, pyr_height.value)
+    points, edges = creation.pyramid(base_size.value, pyr_height.value)
 
     verts_projected = transform.apply(
         points,
         transform.compose(
             transform.axonometric_projection(alpha.value, beta.value),
             transform.translation_3d(pos_x, pos_y, pos_z),
-            transform.rotation_3d_z(current_frame * spin_speed.value)
-        )
+            transform.rotation_3d_z(current_frame * spin_speed.value),
+        ),
     )
     return color, edges, opacity, pos_x, pos_y, pos_z, verts_projected
 
@@ -125,18 +126,25 @@ def _(
     sclimit = spawn_radius.value + 5
     ax.set_xlim(-sclimit, sclimit)
     ax.set_ylim(-sclimit, sclimit)
-    ax.set_aspect('equal')
-    ax.axis('off')
+    ax.set_aspect("equal")
+    ax.axis("off")
 
     for i, j in edges:
         p1 = verts_projected[:, i]
         p2 = verts_projected[:, j]
-        ax.plot([p1[0], p2[0]], [p1[1], p2[1]], 
-                color=color, alpha=opacity, linewidth=2.5, solid_capstyle='round')
+        ax.plot(
+            [p1[0], p2[0]],
+            [p1[1], p2[1]],
+            color=color,
+            alpha=opacity,
+            linewidth=2.5,
+            solid_capstyle="round",
+        )
 
     ax.set_title(
         f"Cycle: {new_cycle_idx} | Pos: ({pos_x:.1f}, {pos_y:.1f}, {pos_z:.1f})",
-        color='gray', fontsize=10
+        color="gray",
+        fontsize=10,
     )
 
     plt.close(fig)
@@ -160,17 +168,16 @@ def _(mo):
 
     spawn_radius = mo.ui.slider(2.0, 15.0, value=8.0, label="Spawn Radius")
 
-    settings = mo.accordion({
-        "Geometry": mo.vstack([base_size, pyr_height]),
-        "Dynamics": mo.vstack([cycle_len, spin_speed]),
-        "Projection": mo.vstack([alpha, beta]),
-        "Randomness": mo.vstack([spawn_radius])
-    })
+    settings = mo.accordion(
+        {
+            "Geometry": mo.vstack([base_size, pyr_height]),
+            "Dynamics": mo.vstack([cycle_len, spin_speed]),
+            "Projection": mo.vstack([alpha, beta]),
+            "Randomness": mo.vstack([spawn_radius]),
+        }
+    )
 
-    mo.vstack([
-        mo.hstack([play, speed], justify="center"),
-        settings
-    ])
+    mo.vstack([mo.hstack([play, speed], justify="center"), settings])
     return (
         alpha,
         base_size,

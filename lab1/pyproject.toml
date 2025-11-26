@@ -10,5 +10,13 @@ dependencies = [
     "numpy>=2.3.5",
 ]
 
+[dependency-groups]
+dev = [
+    "ruff>=0.14.6",
+]
+
 [tool.uv]
 package = true
+
+[tool.ruff]
+line-length = 80
