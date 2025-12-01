@@ -1,0 +1,217 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{fontspec}
+\usepackage[ukrainian]{babel}
+
+\usepackage{Alegreya} 
+\setmonofont{0xProto-Regular} 
+
+\usepackage{geometry}
+\geometry{
+    left=25mm,
+    right=15mm,
+    top=20mm,
+    bottom=20mm
+}
+
+\usepackage{indentfirst}
+\setlength{\parindent}{1.25cm}
+
+\usepackage{setspace}
+\singlespacing
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\renewcommand{\thesection}{\Roman{section}} 
+\renewcommand{\thesubsection}{\thesection.\Roman{subsection}}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4,
+    language=Python,
+    frame=single
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+\directlua{token.set_macro(("studentname"),   os.getenv("REPORT_STUDENT_NAME")   or ("Student"),   ("global"))}
+\directlua{token.set_macro(("studentcourse"), os.getenv("REPORT_STUDENT_COURSE") or ("Course"),    ("global"))}
+\directlua{token.set_macro(("studentgroup"),  os.getenv("REPORT_STUDENT_GROUP")  or ("Group"),     ("global"))}
+\directlua{token.set_macro(("professorname"), os.getenv("REPORT_PROFESSOR_NAME") or ("Professor"), ("global"))}
+
+\begin{titlepage}
+    \begin{center}
+		{\Large
+			МІНІСТЕРСТВО ОСВІТИ ТА НАУКИ УКРАЇНИ
+
+			НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ УКРАЇНИ
+			«КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ ІМЕНІ ІГОРЯ СІКОРСЬКОГО»
+
+			ФАКУЛЬТЕТ ІНФОРМАТИКИ ТА ОБЧИСЛЮВАЛЬНОЇ ТЕХНІКИ
+
+			КАФЕДРА ІНФОРМАЦІЙНИХ СИСТЕМ ТА ТЕХНОЛОГІЙ
+		}
+
+
+		\vspace{60mm}
+		{\large
+			\textbf{ЗВІТ}
+
+			\vspace{5mm}
+
+			\textbf{До лабораторної роботи \textnumero 2}
+
+			\vspace{5mm}
+
+			з дисципліни «Технології Computer Vision»
+            
+            \vspace{2mm}
+            
+            (Сертифікатна програма Data Science із Sigma Software)
+		}
+
+	\end{center}
+
+	\vfill
+
+	\begin{minipage}[t]{0.30\textwidth}
+		\textbf{Перевірив:}
+
+        \professorname
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.30\textwidth}
+		\textbf{Виконав:}
+
+		студент групи \studentgroup
+
+        \studentname
+	\end{minipage}
+
+	\vfill
+
+	\begin{center}
+		{\bf
+			Київ
+
+			КПІ Ім. Ігоря Сікорського
+
+			2025
+		}
+	\end{center}
+\end{titlepage}
+
+\section{Мета і завдання лабораторної роботи}
+
+\textbf{Мета роботи:} дослідити принципи та особливості практичного
+застосування технологій обробки растрових та векторних цифрових зображень для
+задач Computer Vision з використанням спеціалізованих програмних бібліотек.
+
+\textbf{Завдання:}
+\begin{enumerate}
+    \item За даними від ArcGIS Living Atlas та Bing Maps підрахувати кількість
+        будівель в головному кампусі КПІ.
+    \item Порівняти отримані результати.
+    \item Знайти комбінацію операцій обробки растрових зображень та
+        векторизації, коли кількість знайдених будівель за ArcGIS буде
+        відповідати реальній кількості (або еталону з Bing Maps).
+\end{enumerate}
+
+\section{Синтезована математична модель}
+
+\subsection{Колірна модель HSV}
+Для сегментації дахів будівель використано колірний простір \textbf{HSV} (Hue,
+Saturation, Value). На відміну від RGB, HSV дозволяє відокремити інформацію про
+колір (H) від його інтенсивності (V), що робить алгоритм більш стійким до тіней
+та нерівномірного освітлення.
+
+Сегментація виконується шляхом бінаризації за пороговими значеннями:
+\[
+    M(x,y) = \begin{cases} 
+    1, & \text{якщо } H \in [H_{min}, H_{max}] \land S \in [S_{min}, S_{max}] \land V \in [V_{min}, V_{max}] \\
+    0, & \text{інакше}
+    \end{cases}
+\]
+
+\subsection{Морфологічні операції}
+Для покращення бінарної маски використовуються морфологічні операції:
+\begin{itemize}
+    \item \textbf{Opening (Розмикання):} Ерозія з подальшою дилатацією ($A
+        \circ B = (A \ominus B) \oplus B$). Використовується для видалення
+        дрібного шуму.
+    \item \textbf{Closing (Замикання):} Дилатація з подальшою ерозією ($A
+        \bullet B = (A \oplus B) \ominus B$). Використовується для "заливання"
+        дірок всередині об'єктів та об'єднання розірваних частин будівель.
+\end{itemize}
+
+\section{Архітектура та реалізація}
+
+Програма складається з модуля обробки зображень \texttt{vision.py} та
+інтерактивного ноутбука \texttt{task3.py}.
+
+\subsection{Інтерактивний інтерфейс}
+Для підбору параметрів використано бібліотеку \textbf{Marimo}, що дозволяє
+динамічно змінювати порогові значення HSV, розмір ядра розмиття та параметри
+морфології.
+
+\section{Результати роботи}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{media/arcgis_result.png}
+\end{figure}
+
+\subsection{Програмний код}
+
+\lstinputlisting[language=Python, caption=vision.py]{../../src/lab2/vision.py}
+
+\section{Висновки}
+У ході лабораторної роботи було реалізовано пайплайн для обробки супутникових знімків:
+\begin{enumerate}
+    \item Використання колірного простору HSV дозволило ефективно виділити дахи
+        будівель, ігноруючи асфальт та рослинність.
+    \item Морфологічна операція \texttt{Closing} виявилася критично важливою
+        для об'єднання окремих пікселів даху в єдиний контур будівлі, особливо
+        на зображеннях низької якості.
+    \item Фільтрація за площею (contour area) дозволила відсіяти дрібний шум
+        (автомобілі, кіоски) та занадто великі об'єкти (помилки сегментації
+        фону).
+    \item Експериментально доведено, що для різних джерел даних (Bing vs
+        ArcGIS) необхідні різні набори параметрів фільтрації.
+\end{enumerate}
+
+Завдання виконав \studentname
+
+\end{document}
