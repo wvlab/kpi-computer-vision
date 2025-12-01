@@ -3,7 +3,8 @@
 ;; that accepts a '--manifest' (or '-m') option.
 
 (specifications->manifest
-  (list "zstd:lib" "zlib" "gcc-toolchain" ; general dev libs
+  (list "zstd:lib" "zlib" "gcc-toolchain"
+        "libglvnd" "glib" ; general dev libs
         "uv"                              ; python dev tools
         "make"                            ; general dev tools
         "texlive-scheme-basic"            ; base latex
