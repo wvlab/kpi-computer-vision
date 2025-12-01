@@ -73,43 +73,61 @@
 \directlua{token.set_macro(("professorname"), os.getenv("REPORT_PROFESSOR_NAME") or ("Professor"), ("global"))}
 
 \begin{titlepage}
-    \centering
-    \textbf{Міністерство освіти і науки України}\\
-    \textbf{Національний технічний університет України}\\
-    \textbf{«Київський політехнічний інститут імені Ігоря Сікорського»}\\
-    \textbf{Кафедра обчислювальної техніки ФІОТ}
+    \begin{center}
+		{\Large
+			МІНІСТЕРСТВО ОСВІТИ ТА НАУКИ УКРАЇНИ
 
-    \vspace{4cm}
+			НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ УКРАЇНИ
+			«КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ ІМЕНІ ІГОРЯ СІКОРСЬКОГО»
 
-    \textbf{\Large ЗВІТ}\\
-    \textbf{з лабораторної роботи №1}\\
-    \vspace{0.5cm}
-    з навчальної дисципліни «Технології Computer Vision»\\
-    (Сертифікатна програма Data Science із Sigma Software)
+			ФАКУЛЬТЕТ ІНФОРМАТИКИ ТА ОБЧИСЛЮВАЛЬНОЇ ТЕХНІКИ
 
-    \vspace{2cm}
+			КАФЕДРА ІНФОРМАЦІЙНИХ СИСТЕМ ТА ТЕХНОЛОГІЙ
+		}
 
-    \textbf{Тема:}\\
-    \textbf{\Large БАЗОВІ ГЕОМЕТРИЧНІ ПЕРЕТВОРЕННЯ 2D ТА 3D ОБ’ЄКТІВ}
 
-    \vspace{3cm}
+		\vspace{60mm}
+		{\large
+			\textbf{ЗВІТ}
 
-    \begin{flushright}
-        \textbf{Виконав:}\\
-        Студент курсу \studentcourse{}, групи \studentgroup{}
-        
-        \studentname{}
+			\vspace{5mm}
 
-        \vspace{1cm}
-        
-        \textbf{Перевірив:}
-        
-        \professorname{}
-    \end{flushright}
+			\textbf{До лабораторної роботи \textnumero 1}
 
-    \vfill
+			\vspace{5mm}
 
-    \textbf{Київ 2025}
+			з дисципліни «Технології Computer Vision»
+		}
+
+	\end{center}
+
+	\vfill
+
+	\begin{minipage}[t]{0.30\textwidth}
+		\textbf{Перевірив:}
+
+        \professorname
+	\end{minipage}
+	\hfill
+	\begin{minipage}[t]{0.30\textwidth}
+		\textbf{Виконав:}
+
+		студент групи \studentgroup
+
+        \studentname
+	\end{minipage}
+
+	\vfill
+
+	\begin{center}
+		{\bf
+			Київ
+
+			КПІ Ім. Ігоря Сікорського
+
+			2025
+		}
+	\end{center}
 \end{titlepage}
 
 \section{Мета роботи}
